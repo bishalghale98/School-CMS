@@ -1,0 +1,6 @@
+{
+    "preset": "psr-12",
+    "rules": {
+        "declare_strict_types": true
+    }
+}
