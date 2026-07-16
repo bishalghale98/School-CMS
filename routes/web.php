@@ -10,6 +10,7 @@ use App\Http\Controllers\FacilitiesController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InquiryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NoticesController;
 use App\Http\Controllers\SearchController;
@@ -45,6 +46,12 @@ Route::prefix('/gallery')->name('gallery.')->group(function () {
 Route::get('/teachers', TeachersController::class)->name('teachers');
 Route::get('/facilities', FacilitiesController::class)->name('facilities');
 Route::get('/downloads', DownloadsController::class)->name('downloads');
-Route::get('/contact', ContactController::class)->name('contact');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])
+    ->middleware('throttle.contact')
+    ->name('contact.store');
+Route::post('/inquiry', [InquiryController::class, 'store'])
+    ->middleware('throttle.inquiry')
+    ->name('inquiry.store');
 Route::get('/faq', FaqController::class)->name('faq');
 Route::get('/search', SearchController::class)->name('search');

@@ -3,7 +3,10 @@
 if (!function_exists('school_setting')) {
     function school_setting(string $key, mixed $default = null): mixed
     {
-        return $default;
+        return \Illuminate\Support\Facades\Cache::remember("setting:{$key}", 3600, function () use ($key, $default) {
+            $setting = \App\Models\Setting::where('key', $key)->first();
+            return $setting?->value ?? $default;
+        });
     }
 }
 

@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'throttle.inquiry' => 'throttle:10,60',
+            'throttle.contact' => 'throttle:5,60',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
