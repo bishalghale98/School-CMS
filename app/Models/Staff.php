@@ -8,12 +8,10 @@ use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Staff extends Model implements HasMedia
+class Staff extends Model
 {
-    use HasFactory, SoftDeletes, HasSlug, InteractsWithMedia;
+    use HasFactory, SoftDeletes, HasSlug;
 
     protected $fillable = [
         'name',
@@ -35,12 +33,5 @@ class Staff extends Model implements HasMedia
     protected function slugSource(): string
     {
         return 'name';
-    }
-
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('photo')
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
-            ->singleFile();
     }
 }

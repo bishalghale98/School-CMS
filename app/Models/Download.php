@@ -8,12 +8,10 @@ use App\Enums\DownloadCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Download extends Model implements HasMedia
+class Download extends Model
 {
-    use HasFactory, SoftDeletes, InteractsWithMedia;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -32,16 +30,4 @@ class Download extends Model implements HasMedia
         'file_size' => 'integer',
         'download_count' => 'integer',
     ];
-
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('file')
-            ->acceptsMimeTypes([
-                'application/pdf',
-                'application/msword',
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'application/vnd.ms-excel',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ]);
-    }
 }

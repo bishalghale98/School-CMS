@@ -11,12 +11,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class News extends Model implements HasMedia
+class News extends Model
 {
-    use HasFactory, SoftDeletes, HasSlug, HasStatus, InteractsWithMedia;
+    use HasFactory, SoftDeletes, HasSlug, HasStatus;
 
     protected $fillable = [
         'title',
@@ -39,12 +37,5 @@ class News extends Model implements HasMedia
     public function category(): BelongsTo
     {
         return $this->belongsTo(NewsCategory::class, 'news_category_id');
-    }
-
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('featured_image')
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
-            ->singleFile();
     }
 }

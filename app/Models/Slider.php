@@ -8,12 +8,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Slider extends Model implements HasMedia
+class Slider extends Model
 {
-    use HasFactory, InteractsWithMedia, LogsActivity;
+    use HasFactory, LogsActivity;
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -34,11 +32,4 @@ class Slider extends Model implements HasMedia
     protected $casts = [
         'is_active' => 'boolean',
     ];
-
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('hero_image')
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
-            ->singleFile();
-    }
 }

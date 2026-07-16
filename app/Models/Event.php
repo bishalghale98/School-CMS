@@ -9,12 +9,10 @@ use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Event extends Model implements HasMedia
+class Event extends Model
 {
-    use HasFactory, SoftDeletes, HasSlug, InteractsWithMedia;
+    use HasFactory, SoftDeletes, HasSlug;
 
     protected $fillable = [
         'title',
@@ -28,12 +26,6 @@ class Event extends Model implements HasMedia
         'meta_title',
         'meta_description',
     ];
-
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('gallery')
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
-    }
 
     protected $casts = [
         'status' => EventStatus::class,

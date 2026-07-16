@@ -7,16 +7,16 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TeacherResource\Pages;
 use App\Models\Teacher;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -69,9 +69,10 @@ class TeacherResource extends Resource
                     RichEditor::make('biography')
                         ->columnSpanFull(),
                 ]),
-                SpatieMediaLibraryFileUpload::make('photo')
-                    ->collection('photo')
+                FileUpload::make('photo')
                     ->image()
+                    ->disk('public')
+                    ->directory('teachers')
                     ->columnSpanFull(),
             ]);
     }

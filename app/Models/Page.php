@@ -10,12 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Page extends Model implements HasMedia
+class Page extends Model
 {
-    use HasFactory, SoftDeletes, HasSlug, InteractsWithMedia, LogsActivity;
+    use HasFactory, SoftDeletes, HasSlug, LogsActivity;
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -38,11 +36,4 @@ class Page extends Model implements HasMedia
     protected $casts = [
         'is_published' => 'boolean',
     ];
-
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('featured_image')
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
-            ->singleFile();
-    }
 }

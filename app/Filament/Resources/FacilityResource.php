@@ -8,17 +8,17 @@ use App\Enums\FacilityType;
 use App\Filament\Resources\FacilityResource\Pages;
 use App\Models\Facility;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Section;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -63,10 +63,11 @@ class FacilityResource extends Resource
                     RichEditor::make('description')
                         ->columnSpanFull(),
                 ]),
-                SpatieMediaLibraryFileUpload::make('images')
-                    ->collection('images')
+                FileUpload::make('images')
                     ->image()
                     ->multiple()
+                    ->disk('public')
+                    ->directory('facilities')
                     ->columnSpanFull(),
             ]);
     }

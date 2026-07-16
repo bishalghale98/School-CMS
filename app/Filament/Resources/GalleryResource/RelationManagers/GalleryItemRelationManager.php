@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\GalleryResource\RelationManagers;
 
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -44,8 +44,11 @@ class GalleryItemRelationManager extends RelationManager
                 TextInput::make('sort_order')
                     ->numeric()
                     ->default(0),
-                SpatieMediaLibraryFileUpload::make('file')
-                    ->collection('file')
+                FileUpload::make('file_path')
+                    ->label('File')
+                    ->disk('public')
+                    ->directory('galleries')
+                    ->image(fn ($get) => $get('type') === 'image')
                     ->columnSpanFull(),
             ]);
     }
