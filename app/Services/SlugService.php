@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class SlugService
@@ -24,7 +25,7 @@ class SlugService
 
     protected function slugExists(string $slug, string $table, ?int $ignoreId): bool
     {
-        $query = \DB::table($table)->where('slug', $slug);
+        $query = DB::table($table)->where('slug', $slug);
 
         if ($ignoreId) {
             $query->where('id', '!=', $ignoreId);

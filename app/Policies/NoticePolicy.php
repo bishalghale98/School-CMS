@@ -4,38 +4,72 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Enums\NoticeStatus;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Notice;
-use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class NoticePolicy
 {
-    public function viewAny(User $user): bool
+    use HandlesAuthorization;
+    
+    public function viewAny(AuthUser $authUser): bool
     {
-        return true;
+        return $authUser->can('ViewAny:Notice');
     }
 
-    public function view(User $user, Notice $notice): bool
+    public function view(AuthUser $authUser, Notice $notice): bool
     {
-        if ($notice->status === NoticeStatus::Published) {
-            return true;
-        }
-
-        return $user->exists && $user->hasAnyRole(['super_admin', 'admin', 'content_editor']);
+        return $authUser->can('View:Notice');
     }
 
-    public function create(User $user): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $user->hasAnyRole(['super_admin', 'admin', 'content_editor']);
+        return $authUser->can('Create:Notice');
     }
 
-    public function update(User $user, Notice $notice): bool
+    public function update(AuthUser $authUser, Notice $notice): bool
     {
-        return $user->hasAnyRole(['super_admin', 'admin', 'content_editor']);
+        return $authUser->can('Update:Notice');
     }
 
-    public function delete(User $user, Notice $notice): bool
+    public function delete(AuthUser $authUser, Notice $notice): bool
     {
-        return $user->hasAnyRole(['super_admin', 'admin', 'content_editor']);
+        return $authUser->can('Delete:Notice');
     }
+
+    public function deleteAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('DeleteAny:Notice');
+    }
+
+    public function restore(AuthUser $authUser, Notice $notice): bool
+    {
+        return $authUser->can('Restore:Notice');
+    }
+
+    public function forceDelete(AuthUser $authUser, Notice $notice): bool
+    {
+        return $authUser->can('ForceDelete:Notice');
+    }
+
+    public function forceDeleteAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('ForceDeleteAny:Notice');
+    }
+
+    public function restoreAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('RestoreAny:Notice');
+    }
+
+    public function replicate(AuthUser $authUser, Notice $notice): bool
+    {
+        return $authUser->can('Replicate:Notice');
+    }
+
+    public function reorder(AuthUser $authUser): bool
+    {
+        return $authUser->can('Reorder:Notice');
+    }
+
 }

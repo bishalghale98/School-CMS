@@ -1,4 +1,0 @@
-Admin
-admin@schoolcms.test
-password
-password
