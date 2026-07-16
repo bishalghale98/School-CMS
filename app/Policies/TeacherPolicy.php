@@ -4,33 +4,72 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Teacher;
-use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TeacherPolicy
 {
-    public function viewAny(User $user): bool
+    use HandlesAuthorization;
+    
+    public function viewAny(AuthUser $authUser): bool
     {
-        return true;
+        return $authUser->can('ViewAny:Teacher');
     }
 
-    public function view(User $user, Teacher $teacher): bool
+    public function view(AuthUser $authUser, Teacher $teacher): bool
     {
-        return $teacher->is_published || $user->hasAnyRole(['super_admin', 'admin', 'content_editor']);
+        return $authUser->can('View:Teacher');
     }
 
-    public function create(User $user): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $user->hasAnyRole(['super_admin', 'admin', 'content_editor']);
+        return $authUser->can('Create:Teacher');
     }
 
-    public function update(User $user, Teacher $teacher): bool
+    public function update(AuthUser $authUser, Teacher $teacher): bool
     {
-        return $user->hasAnyRole(['super_admin', 'admin', 'content_editor']);
+        return $authUser->can('Update:Teacher');
     }
 
-    public function delete(User $user, Teacher $teacher): bool
+    public function delete(AuthUser $authUser, Teacher $teacher): bool
     {
-        return $user->hasAnyRole(['super_admin', 'admin']);
+        return $authUser->can('Delete:Teacher');
     }
+
+    public function deleteAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('DeleteAny:Teacher');
+    }
+
+    public function restore(AuthUser $authUser, Teacher $teacher): bool
+    {
+        return $authUser->can('Restore:Teacher');
+    }
+
+    public function forceDelete(AuthUser $authUser, Teacher $teacher): bool
+    {
+        return $authUser->can('ForceDelete:Teacher');
+    }
+
+    public function forceDeleteAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('ForceDeleteAny:Teacher');
+    }
+
+    public function restoreAny(AuthUser $authUser): bool
+    {
+        return $authUser->can('RestoreAny:Teacher');
+    }
+
+    public function replicate(AuthUser $authUser, Teacher $teacher): bool
+    {
+        return $authUser->can('Replicate:Teacher');
+    }
+
+    public function reorder(AuthUser $authUser): bool
+    {
+        return $authUser->can('Reorder:Teacher');
+    }
+
 }

@@ -1,0 +1,13 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filament\Resources\FacilityResource\Pages;
+
+use App\Filament\Resources\FacilityResource;
+use Filament\Resources\Pages\CreateRecord;
+
+class CreateFacility extends CreateRecord
+{
+    protected static string $resource = FacilityResource::class;
+}
