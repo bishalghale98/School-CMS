@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,23 +15,8 @@ class DatabaseSeeder extends Seeder
             PageSeeder::class,
             NoticeCategorySeeder::class,
             FaqSeeder::class,
-        ]);
-
-        $this->call([
             RoleSeeder::class,
+            UserSeeder::class,
         ]);
-
-        $user = User::firstOrCreate(
-            ['email' => 'admin@schoolcms.test'],
-            [
-                'name' => 'Admin',
-                'email' => 'admin@schoolcms.test',
-                'password' => bcrypt('password'),
-            ]
-        );
-
-        if (!$user->hasRole('super_admin')) {
-            $user->assignRole('super_admin');
-        }
     }
 }

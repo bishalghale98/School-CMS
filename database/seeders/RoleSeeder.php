@@ -14,71 +14,139 @@ class RoleSeeder extends Seeder
     {
         app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $permissions = [
-            // Content
-            'view_notice', 'create_notice', 'edit_notice', 'delete_notice',
-            'view_news', 'create_news', 'edit_news', 'delete_news',
-            'view_event', 'create_event', 'edit_event', 'delete_event',
-            'view_page', 'create_page', 'edit_page', 'delete_page',
-            'view_faq', 'create_faq', 'edit_faq', 'delete_faq',
-            'view_testimonial', 'create_testimonial', 'edit_testimonial', 'delete_testimonial',
-            // School
-            'view_teacher', 'create_teacher', 'edit_teacher', 'delete_teacher',
-            'view_staff', 'create_staff', 'edit_staff', 'delete_staff',
-            'view_facility', 'create_facility', 'edit_facility', 'delete_facility',
-            'view_program', 'create_program', 'edit_program', 'delete_program',
-            'view_download', 'create_download', 'edit_download', 'delete_download',
-            'view_gallery', 'create_gallery', 'edit_gallery', 'delete_gallery',
-            // Admissions
-            'view_inquiry', 'create_inquiry', 'edit_inquiry', 'delete_inquiry',
-            // System
-            'view_setting', 'create_setting', 'edit_setting', 'delete_setting',
-            'view_slider', 'create_slider', 'edit_slider', 'delete_slider',
-            'view_menu', 'create_menu', 'edit_menu', 'delete_menu',
-            'view_user', 'create_user', 'edit_user', 'delete_user',
+        // Resources that have full CRUD + reorder
+        $fullCrudResources = [
+            'Notice', 'NoticeCategory',
+            'News', 'NewsCategory',
+            'Event',
+            'Page',
+            'Faq',
+            'Testimonial',
+            'Teacher', 'Staff',
+            'Facility', 'AcademicProgram',
+            'Download', 'Gallery',
         ];
 
-        foreach ($permissions as $name) {
-            Permission::firstOrCreate(['guard_name' => 'web', 'name' => $name]);
+        // System resources (admin-only)
+        $systemResources = [
+            'Setting', 'Slider', 'Menu',
+        ];
+
+        // Resources with limited actions
+        $limitedResources = [
+            'AdmissionInquiry',
+            'ContactSubmission',
+        ];
+
+        $allResources = array_merge($fullCrudResources, $systemResources, $limitedResources, ['User', 'Role']);
+
+        $allPermissions = [];
+
+        // Full CRUD + reorder + restore for content/school resources
+        $crudActions = ['ViewAny', 'View', 'Create', 'Update', 'Delete', 'DeleteAny', 'Restore', 'Reorder'];
+        foreach ($fullCrudResources as $resource) {
+            foreach ($crudActions as $action) {
+                $allPermissions[] = "{$action}:{$resource}";
+            }
         }
 
+        // System resources: full CRUD + reorder (no restore needed)
+        $systemActions = ['ViewAny', 'View', 'Create', 'Update', 'Delete', 'DeleteAny', 'Reorder'];
+        foreach ($systemResources as $resource) {
+            foreach ($systemActions as $action) {
+                $allPermissions[] = "{$action}:{$resource}";
+            }
+        }
+
+        // Limited resources: view + update only
+        foreach ($limitedResources as $resource) {
+            $allPermissions[] = "ViewAny:{$resource}";
+            $allPermissions[] = "View:{$resource}";
+            $allPermissions[] = "Update:{$resource}";
+        }
+
+        // User management
+        $userActions = ['ViewAny', 'View', 'Create', 'Update', 'Delete', 'DeleteAny'];
+        foreach ($userActions as $action) {
+            $allPermissions[] = "{$action}:User";
+        }
+
+        // Role management (view only for admin)
+        $allPermissions[] = 'ViewAny:Role';
+        $allPermissions[] = 'View:Role';
+
+        // Panel access
+        $allPermissions[] = 'panel_user';
+
+        // Create all permissions
+        foreach ($allPermissions as $name) {
+            Permission::firstOrCreate([
+                'name' => $name,
+                'guard_name' => 'web',
+            ]);
+        }
+
+        // ── Super Admin: everything ──
         $superAdmin = Role::firstOrCreate(['name' => 'super_admin']);
         $superAdmin->givePermissionTo(Permission::all());
 
+        // ── Admin: content + school + system + users, no role create/delete ──
         $admin = Role::firstOrCreate(['name' => 'admin']);
-        $admin->givePermissionTo([
-            'view_notice', 'create_notice', 'edit_notice', 'delete_notice',
-            'view_news', 'create_news', 'edit_news', 'delete_news',
-            'view_event', 'create_event', 'edit_event', 'delete_event',
-            'view_page', 'create_page', 'edit_page', 'delete_page',
-            'view_faq', 'create_faq', 'edit_faq', 'delete_faq',
-            'view_testimonial', 'create_testimonial', 'edit_testimonial', 'delete_testimonial',
-            'view_teacher', 'create_teacher', 'edit_teacher', 'delete_teacher',
-            'view_staff', 'create_staff', 'edit_staff', 'delete_staff',
-            'view_facility', 'create_facility', 'edit_facility', 'delete_facility',
-            'view_program', 'create_program', 'edit_program', 'delete_program',
-            'view_download', 'create_download', 'edit_download', 'delete_download',
-            'view_gallery', 'create_gallery', 'edit_gallery', 'delete_gallery',
-            'view_inquiry', 'create_inquiry', 'edit_inquiry', 'delete_inquiry',
-            'view_setting', 'edit_setting',
-            'view_slider', 'create_slider', 'edit_slider', 'delete_slider',
-            'view_menu', 'create_menu', 'edit_menu', 'delete_menu',
-        ]);
+        $adminPermissions = [];
 
+        foreach ($fullCrudResources as $resource) {
+            foreach ($crudActions as $action) {
+                $adminPermissions[] = "{$action}:{$resource}";
+            }
+        }
+        foreach ($systemResources as $resource) {
+            foreach ($systemActions as $action) {
+                $adminPermissions[] = "{$action}:{$resource}";
+            }
+        }
+        foreach ($limitedResources as $resource) {
+            $adminPermissions[] = "ViewAny:{$resource}";
+            $adminPermissions[] = "View:{$resource}";
+            $adminPermissions[] = "Update:{$resource}";
+        }
+        foreach ($userActions as $action) {
+            $adminPermissions[] = "{$action}:User";
+        }
+        $adminPermissions[] = 'ViewAny:Role';
+        $adminPermissions[] = 'View:Role';
+        $adminPermissions[] = 'panel_user';
+
+        $admin->givePermissionTo($adminPermissions);
+
+        // ── Content Editor: content + school only, no delete, no system ──
         $contentEditor = Role::firstOrCreate(['name' => 'content_editor']);
-        $contentEditor->givePermissionTo([
-            'view_notice', 'create_notice', 'edit_notice', 'delete_notice',
-            'view_news', 'create_news', 'edit_news', 'delete_news',
-            'view_event', 'create_event', 'edit_event', 'delete_event',
-            'view_page', 'create_page', 'edit_page',
-            'view_faq', 'create_faq', 'edit_faq',
-            'view_testimonial', 'create_testimonial', 'edit_testimonial',
-            'view_teacher', 'create_teacher', 'edit_teacher',
-            'view_staff', 'create_staff', 'edit_staff',
-            'view_facility', 'create_facility', 'edit_facility',
-            'view_program', 'create_program', 'edit_program',
-            'view_gallery', 'create_gallery', 'edit_gallery',
-            'view_inquiry', 'edit_inquiry',
-        ]);
+        $editorPermissions = [];
+
+        $editorActions = ['ViewAny', 'View', 'Create', 'Update', 'Reorder'];
+        foreach ($fullCrudResources as $resource) {
+            foreach ($editorActions as $action) {
+                $editorPermissions[] = "{$action}:{$resource}";
+            }
+        }
+
+        // Content editor can view/download but not delete
+        $editorPermissions[] = 'ViewAny:Download';
+        $editorPermissions[] = 'View:Download';
+        $editorPermissions[] = 'Create:Download';
+        $editorPermissions[] = 'Update:Download';
+
+        // Can view and update admissions
+        $editorPermissions[] = 'ViewAny:AdmissionInquiry';
+        $editorPermissions[] = 'View:AdmissionInquiry';
+        $editorPermissions[] = 'Update:AdmissionInquiry';
+
+        // Can view and update contact submissions
+        $editorPermissions[] = 'ViewAny:ContactSubmission';
+        $editorPermissions[] = 'View:ContactSubmission';
+        $editorPermissions[] = 'Update:ContactSubmission';
+
+        $editorPermissions[] = 'panel_user';
+
+        $contentEditor->givePermissionTo($editorPermissions);
     }
 }

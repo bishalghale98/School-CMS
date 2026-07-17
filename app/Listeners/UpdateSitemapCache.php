@@ -49,7 +49,7 @@ class UpdateSitemapCache
                     ->setPriority(0.5));
             }
 
-            foreach (\App\Models\GalleryAlbum::published()->get() as $album) {
+            foreach (\App\Models\Gallery::query()->where('is_published', true)->get() as $album) {
                 $sitemap->add(Url::create("/gallery/{$album->slug}")
                     ->setLastModificationDate($album->updated_at)
                     ->setChangeFrequency('monthly')

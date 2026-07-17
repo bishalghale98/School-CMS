@@ -10,7 +10,7 @@
     <title>@yield('title', config('app.name', 'School CMS'))</title>
     <meta name="description" content="@yield('meta_description', '')">
 
-    <meta property="og:title" content="@yield('og_title', '@yield('title')')">
+    <meta property="og:title" content="@yield('og_title', config('app.name', 'School CMS'))">
     <meta property="og:description" content="@yield('meta_description', '')">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="@yield('og_type', 'website')">
@@ -26,15 +26,16 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
 
-    <script type="application/ld+json">@json([
+    <script type="application/ld+json">{!! json_encode([
         '@context' => 'https://schema.org',
         '@type' => 'EducationalOrganization',
         'name' => school_setting('school_name', config('app.name')),
         'url' => url('/'),
         'telephone' => school_setting('phone'),
         'email' => school_setting('email'),
-    ])</script>
+    ]) !!}</script>
 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
 <body class="min-h-screen flex flex-col">
