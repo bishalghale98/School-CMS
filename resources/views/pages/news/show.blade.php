@@ -1,5 +1,8 @@
 @extends('layouts.public')
 
+@section('og_image', $news->getFirstMediaUrl('featured_image') ?: '')
+@section('og_type', 'article')
+
 @section('breadcrumbs')
     <x-layout.breadcrumbs :crumbs="[
         ['label' => 'News', 'url' => route('news.index')],

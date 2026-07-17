@@ -60,3 +60,5 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->name('contact.store');
 Route::get('/faq', FaqController::class)->name('faq');
 Route::get('/search', SearchController::class)->name('search');
+
+Route::get('/robots.txt', fn () => response()->view('pages.robots', ['host' => request()->getHost()])->header('Content-Type', 'text/plain'));

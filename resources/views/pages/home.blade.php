@@ -1,6 +1,7 @@
 @extends('layouts.public')
 
 @section('title', school_setting('school_name', config('app.name', 'School CMS')) . ' | Home')
+@section('og_type', 'website')
 
 @section('content')
     @php $slider = $sliders->first(); @endphp
