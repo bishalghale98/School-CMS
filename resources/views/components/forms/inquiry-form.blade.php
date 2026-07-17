@@ -81,7 +81,7 @@
                 this.errors = {};
                 this.success = false;
                 try {
-                    const response = await fetch('{{ route('admissions.store') }}', {
+                    const response = await fetch('{{ route('online-admission.store') }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

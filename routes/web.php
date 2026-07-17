@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AcademicsController;
-use App\Http\Controllers\AdmissionsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DownloadsController;
 use App\Http\Controllers\EventsController;
@@ -12,6 +11,7 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NoticesController;
+use App\Http\Controllers\OnlineAdmissionController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TeachersController;
 use Illuminate\Support\Facades\Route;
@@ -25,10 +25,14 @@ Route::prefix('/about')->name('about.')->group(function () {
     Route::get('/committee', [AboutController::class, 'committee'])->name('committee');
 });
 Route::get('/academics', AcademicsController::class)->name('academics');
-Route::get('/admissions', [AdmissionsController::class, 'index'])->name('admissions');
-Route::post('/admissions', [AdmissionsController::class, 'store'])
-    ->middleware('throttle:10,60')
-    ->name('admissions.store');
+Route::get('/admissions', fn () => redirect()->route('online-admission.index'))->name('admissions');
+
+Route::prefix('/online-admission')->name('online-admission.')->group(function () {
+    Route::get('/', [OnlineAdmissionController::class, 'index'])->name('index');
+    Route::post('/', [OnlineAdmissionController::class, 'store'])
+        ->middleware('throttle:10,60')
+        ->name('store');
+});
 
 Route::prefix('/notices')->name('notices.')->group(function () {
     Route::get('/', [NoticesController::class, 'index'])->name('index');

@@ -107,7 +107,7 @@
             </a>
 
             <a
-                href="{{ route('admissions') }}"
+                href="{{ route('online-admission.index') }}"
                 class="hidden lg:inline-flex items-center px-6 h-10 text-sm font-medium text-white bg-academic-blue rounded-xl hover:bg-academic-blue/90 transition-colors"
             >
                 Apply Now

@@ -7,12 +7,15 @@
 @endphp
 
 @section('title', 'Teachers & Staff')
+@section('meta_description', 'Meet our dedicated team of educators and staff.')
 
 @section('content')
-    <section class="bg-light-gray border-b border-border">
-        <div class="max-w-[1280px] mx-auto px-5 lg:px-6 py-12 lg:py-24">
-            <h1 class="text-3xl lg:text-5xl font-bold text-academic-blue">Teachers & Staff</h1>
-            <p class="text-lg text-muted mt-2">Meet our dedicated team of educators and staff</p>
+    <section class="relative bg-gradient-to-br from-slate-dark via-slate-dark to-academic-blue/80 py-20 lg:py-32 overflow-hidden">
+        <div class="absolute inset-0 opacity-10"><div class="absolute top-0 right-0 w-96 h-96 bg-white rounded-full translate-x-1/3 -translate-y-1/3"></div></div>
+        <div class="max-w-[1280px] mx-auto px-5 lg:px-6 relative z-10">
+            <span class="inline-block px-4 py-1 rounded-full bg-white/10 text-white/80 text-sm font-semibold mb-4">Our Team</span>
+            <h1 class="text-4xl lg:text-6xl font-bold text-white mb-4">Teachers & Staff</h1>
+            <p class="text-lg text-white/70 max-w-2xl">Meet the dedicated professionals who inspire and guide our students every day.</p>
         </div>
     </section>
 
@@ -21,17 +24,17 @@
             <div x-data="memberFilter()">
                 <div class="flex gap-2 mb-8 p-1 bg-light-gray rounded-xl w-fit">
                     <button @click="tab = 'teachers'; filter = ''" :class="tab === 'teachers' ? 'bg-white shadow-sm text-slate-dark' : 'text-muted hover:text-slate-dark'" class="px-5 py-2 rounded-lg text-sm font-medium transition-all">
-                        Teachers ({{ $teachers->count() }})
+                        Teaching Faculty ({{ $teachers->count() }})
                     </button>
                     <button @click="tab = 'staff'; filter = ''" :class="tab === 'staff' ? 'bg-white shadow-sm text-slate-dark' : 'text-muted hover:text-slate-dark'" class="px-5 py-2 rounded-lg text-sm font-medium transition-all">
-                        Staff ({{ $staff->count() }})
+                        Administrative Staff ({{ $staff->count() }})
                     </button>
                 </div>
 
                 <div x-show="tab === 'teachers'" x-transition>
                     @if ($teacherDepts->count())
                         <div class="flex flex-wrap gap-2 mb-6">
-                            <button @click="filter = ''" :class="!filter ? 'bg-academic-blue text-white' : 'bg-light-gray text-muted hover:bg-gray-200'" class="px-4 py-1.5 rounded-full text-sm font-medium transition-colors">All</button>
+                            <button @click="filter = ''" :class="!filter ? 'bg-academic-blue text-white' : 'bg-light-gray text-muted hover:bg-gray-200'" class="px-4 py-1.5 rounded-full text-sm font-medium transition-colors">All Departments</button>
                             @foreach ($teacherDepts as $dept)
                                 <button @click="filter = '{{ $dept }}'" :class="filter === '{{ $dept }}' ? 'bg-academic-blue text-white' : 'bg-light-gray text-muted hover:bg-gray-200'" class="px-4 py-1.5 rounded-full text-sm font-medium transition-colors">{{ $dept }}</button>
                             @endforeach
@@ -41,25 +44,23 @@
                     @if ($teachers->count())
                         <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             @foreach ($teachers as $teacher)
-                                <div x-show="!filter || '{{ $teacher->department }}' === filter" class="bg-white border border-border rounded-2xl p-6 text-center hover:shadow-md transition-shadow">
-                                    <div class="w-20 h-20 rounded-full bg-light-gray mx-auto mb-4 overflow-hidden flex items-center justify-center">
-                                        @if (false)
-                                            <img src="" alt="{{ $teacher->name }}" class="w-full h-full object-cover">
+                                <div x-show="!filter || '{{ $teacher->department }}' === filter" class="bg-white border border-border rounded-2xl p-6 text-center hover:shadow-lg transition-all duration-300 group">
+                                    <div class="w-24 h-24 rounded-full bg-academic-blue/10 mx-auto mb-4 overflow-hidden flex items-center justify-center group-hover:ring-2 group-hover:ring-academic-blue/20 transition-all">
+                                        @if ($teacher->photo)
+                                            <img src="{{ asset('storage/' . $teacher->photo) }}" alt="{{ $teacher->name }}" class="w-full h-full object-cover">
                                         @else
-                                            <svg class="w-8 h-8 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                            </svg>
+                                            <svg class="w-10 h-10 text-academic-blue/40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                                         @endif
                                     </div>
-                                    <h3 class="font-semibold text-slate-dark">{{ $teacher->name }}</h3>
-                                    <p class="text-xs text-academic-blue font-medium">{{ $teacher->position }}</p>
+                                    <h3 class="font-bold text-slate-dark">{{ $teacher->name }}</h3>
+                                    <p class="text-sm text-academic-blue font-medium">{{ $teacher->position }}</p>
                                     @if ($teacher->department)
                                         <p class="text-xs text-muted mt-1">{{ $teacher->department }}</p>
                                     @endif
                                     @if ($teacher->qualification)
                                         <p class="text-xs text-muted mt-1">{{ $teacher->qualification }}</p>
                                     @endif
-                                    <button @click="openProfile({{ $teacher->id }}, 'teacher')" class="mt-3 text-xs font-medium text-academic-blue hover:underline">View Profile</button>
+                                    <button @click="openProfile({{ $teacher->id }}, 'teacher')" class="mt-4 text-xs font-semibold text-academic-blue hover:underline">View Profile</button>
                                 </div>
                             @endforeach
                         </div>
@@ -71,7 +72,7 @@
                 <div x-show="tab === 'staff'" x-transition x-cloak>
                     @if ($staffDepts->count())
                         <div class="flex flex-wrap gap-2 mb-6">
-                            <button @click="filter = ''" :class="!filter ? 'bg-academic-blue text-white' : 'bg-light-gray text-muted hover:bg-gray-200'" class="px-4 py-1.5 rounded-full text-sm font-medium transition-colors">All</button>
+                            <button @click="filter = ''" :class="!filter ? 'bg-academic-blue text-white' : 'bg-light-gray text-muted hover:bg-gray-200'" class="px-4 py-1.5 rounded-full text-sm font-medium transition-colors">All Departments</button>
                             @foreach ($staffDepts as $dept)
                                 <button @click="filter = '{{ $dept }}'" :class="filter === '{{ $dept }}' ? 'bg-academic-blue text-white' : 'bg-light-gray text-muted hover:bg-gray-200'" class="px-4 py-1.5 rounded-full text-sm font-medium transition-colors">{{ $dept }}</button>
                             @endforeach
@@ -81,22 +82,20 @@
                     @if ($staff->count())
                         <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             @foreach ($staff as $member)
-                                <div x-show="!filter || '{{ $member->department }}' === filter" class="bg-white border border-border rounded-2xl p-6 text-center hover:shadow-md transition-shadow">
-                                    <div class="w-20 h-20 rounded-full bg-light-gray mx-auto mb-4 overflow-hidden flex items-center justify-center">
-                                        @if (false)
-                                            <img src="" alt="{{ $member->name }}" class="w-full h-full object-cover">
+                                <div x-show="!filter || '{{ $member->department }}' === filter" class="bg-white border border-border rounded-2xl p-6 text-center hover:shadow-lg transition-all duration-300 group">
+                                    <div class="w-24 h-24 rounded-full bg-academic-blue/10 mx-auto mb-4 overflow-hidden flex items-center justify-center group-hover:ring-2 group-hover:ring-academic-blue/20 transition-all">
+                                        @if ($member->photo)
+                                            <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->name }}" class="w-full h-full object-cover">
                                         @else
-                                            <svg class="w-8 h-8 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                            </svg>
+                                            <svg class="w-10 h-10 text-academic-blue/40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                                         @endif
                                     </div>
-                                    <h3 class="font-semibold text-slate-dark">{{ $member->name }}</h3>
-                                    <p class="text-xs text-academic-blue font-medium">{{ $member->position }}</p>
+                                    <h3 class="font-bold text-slate-dark">{{ $member->name }}</h3>
+                                    <p class="text-sm text-academic-blue font-medium">{{ $member->position }}</p>
                                     @if ($member->department)
                                         <p class="text-xs text-muted mt-1">{{ $member->department }}</p>
                                     @endif
-                                    <button @click="openProfile({{ $member->id }}, 'staff')" class="mt-3 text-xs font-medium text-academic-blue hover:underline">View Profile</button>
+                                    <button @click="openProfile({{ $member->id }}, 'staff')" class="mt-4 text-xs font-semibold text-academic-blue hover:underline">View Profile</button>
                                 </div>
                             @endforeach
                         </div>
@@ -106,19 +105,16 @@
                 </div>
             </div>
 
-            {{-- Profile Modal --}}
             <x-ui.modal name="member-profile" title="Profile" maxWidth="lg">
                 <template x-if="profile">
                     <div>
                         <div class="flex items-center gap-4 mb-4">
                             <div class="w-20 h-20 rounded-full bg-light-gray overflow-hidden shrink-0 flex items-center justify-center">
                                 <img :src="profile.photo" :alt="profile.name" class="w-full h-full object-cover" x-show="profile.photo">
-                                <svg class="w-8 h-8 text-muted" x-show="!profile.photo" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
+                                <svg class="w-8 h-8 text-muted" x-show="!profile.photo" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-slate-dark text-lg" x-text="profile.name"></h3>
+                                <h3 class="font-bold text-slate-dark text-lg" x-text="profile.name"></h3>
                                 <p class="text-sm text-academic-blue" x-text="profile.position"></p>
                                 <p class="text-xs text-muted" x-text="profile.department" x-show="profile.department"></p>
                             </div>
@@ -134,6 +130,14 @@
             </x-ui.modal>
         </div>
     </section>
+
+    <section class="py-12 lg:py-16 bg-academic-blue">
+        <div class="max-w-[1280px] mx-auto px-5 lg:px-6 text-center">
+            <h2 class="text-2xl lg:text-3xl font-bold text-white mb-3">Join Our Team</h2>
+            <p class="text-white/80 mb-6">We're always looking for talented educators to join our mission.</p>
+            <a href="{{ route('contact') }}" class="inline-flex items-center gap-2 px-8 h-12 text-sm font-semibold text-academic-blue bg-white rounded-xl hover:bg-white/90 transition-all">Contact HR</a>
+        </div>
+    </section>
 @endsection
 
 @push('scripts')
@@ -144,13 +148,13 @@
                 'id' => $t->id, 'name' => $t->name, 'position' => $t->position,
                 'department' => $t->department, 'qualification' => $t->qualification,
                 'biography' => $t->biography, 'email' => $t->email, 'phone' => $t->phone,
-                'photo' => '',
+                'photo' => $t->photo ? asset('storage/' . $t->photo) : '',
             ]);
             $staffData = $staff->map(fn($s) => [
                 'id' => $s->id, 'name' => $s->name, 'position' => $s->position,
                 'department' => $s->department, 'qualification' => $s->qualification,
                 'biography' => $s->biography, 'email' => $s->email, 'phone' => $s->phone,
-                'photo' => '',
+                'photo' => $s->photo ? asset('storage/' . $s->photo) : '',
             ]);
         @endphp
         const teachers = @json($teachersData->toArray());

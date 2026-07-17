@@ -44,12 +44,27 @@ class HeaderComposer
         if (empty($navigation)) {
             $navigation = [
                 ['label' => 'Home', 'route' => 'home', 'url' => route('home'), 'routes' => ['home']],
-                ['label' => 'About', 'route' => 'about.index', 'url' => route('about.index'), 'routes' => ['about.index', 'about.history', 'about.vision-mission', 'about.committee']],
-                ['label' => 'Notices', 'route' => 'notices.index', 'url' => route('notices.index'), 'routes' => ['notices.index', 'notices.show']],
-                ['label' => 'News', 'route' => 'news.index', 'url' => route('news.index'), 'routes' => ['news.index', 'news.show']],
-                ['label' => 'Events', 'route' => 'events.index', 'url' => route('events.index'), 'routes' => ['events.index', 'events.show']],
-                ['label' => 'Gallery', 'route' => 'gallery.index', 'url' => route('gallery.index'), 'routes' => ['gallery.index', 'gallery.show']],
-                ['label' => 'Downloads', 'route' => 'downloads', 'url' => route('downloads'), 'routes' => ['downloads']],
+                ['label' => 'About', 'route' => 'about.index', 'url' => route('about.index'), 'routes' => ['about.index', 'about.history', 'about.vision-mission', 'about.committee'],
+                    'children' => [
+                        ['label' => 'History', 'url' => route('about.history'), 'route' => 'about.history'],
+                        ['label' => 'Vision & Mission', 'url' => route('about.vision-mission'), 'route' => 'about.vision-mission'],
+                        ['label' => 'Committee', 'url' => route('about.committee'), 'route' => 'about.committee'],
+                    ],
+                ],
+                ['label' => 'Academics', 'route' => 'academics', 'url' => route('academics'), 'routes' => ['academics']],
+                ['label' => 'News & Events', 'route' => 'news.index', 'url' => route('news.index'), 'routes' => ['news.index', 'news.show', 'events.index', 'events.show'],
+                    'children' => [
+                        ['label' => 'News', 'url' => route('news.index'), 'route' => 'news.index'],
+                        ['label' => 'Events', 'url' => route('events.index'), 'route' => 'events.index'],
+                    ],
+                ],
+                ['label' => 'School', 'route' => 'gallery.index', 'url' => route('gallery.index'), 'routes' => ['gallery.index', 'gallery.show', 'facilities', 'downloads'],
+                    'children' => [
+                        ['label' => 'Gallery', 'url' => route('gallery.index'), 'route' => 'gallery.index'],
+                        ['label' => 'Facilities', 'url' => route('facilities'), 'route' => 'facilities'],
+                        ['label' => 'Downloads', 'url' => route('downloads'), 'route' => 'downloads'],
+                    ],
+                ],
                 ['label' => 'Contact', 'route' => 'contact', 'url' => route('contact'), 'routes' => ['contact']],
             ];
         }

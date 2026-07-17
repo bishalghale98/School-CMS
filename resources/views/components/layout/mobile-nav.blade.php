@@ -86,7 +86,7 @@
 
             <div class="mt-8 pt-6 border-t border-border">
                 <a
-                    href="{{ route('admissions') }}"
+                    href="{{ route('online-admission.index') }}"
                     @click="open = false"
                     class="flex items-center justify-center w-full h-12 text-base font-medium text-white bg-academic-blue rounded-xl hover:bg-academic-blue/90 transition-colors"
                 >
