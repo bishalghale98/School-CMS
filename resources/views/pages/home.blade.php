@@ -5,45 +5,81 @@
 
 @section('content')
     {{-- ============================================================ --}}
-    {{-- SECTION 1: HERO --}}
+    {{-- SECTION 1: HERO CAROUSEL --}}
     {{-- ============================================================ --}}
-    @php $slider = $sliders->first(); @endphp
-    <section class="relative h-screen min-h-[600px] max-h-[900px] flex items-center justify-center overflow-hidden">
+    @php $slides = $sliders->values(); @endphp
+    <section
+        x-data="heroCarousel({{ $slides->count() }})"
+        class="relative h-screen min-h-[600px] max-h-[900px] flex items-center justify-center overflow-hidden"
+    >
+        {{-- Gradient overlay --}}
         <div class="absolute inset-0 bg-gradient-to-br from-slate-dark/80 via-slate-dark/60 to-academic-blue/40 z-10"></div>
-        <div class="absolute inset-0 bg-light-gray">
-            @if ($slider && $slider->hero_image)
-                <img src="{{ asset('storage/' . $slider->hero_image) }}" alt="{{ $slider->title }}" class="w-full h-full object-cover">
-            @else
-                <div class="w-full h-full bg-gradient-to-br from-academic-blue/30 via-academic-blue/10 to-light-gray"></div>
-            @endif
-        </div>
 
-        <div class="relative z-20 text-center max-w-4xl mx-auto px-5">
-            <div class="animate-fade-in-down">
-                <span class="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white/80 text-sm font-medium mb-6 backdrop-blur-sm border border-white/10">
-                    Welcome to {{ school_setting('school_name', 'Our School') }}
-                </span>
+        {{-- Slide backgrounds --}}
+        @foreach ($slides as $i => $slide)
+            <div
+                class="absolute inset-0 bg-light-gray transition-opacity duration-1000 ease-in-out"
+                :class="current === {{ $i }} ? 'opacity-100' : 'opacity-0'"
+                style="will-change: opacity;"
+            >
+                @if ($slide->hero_image)
+                    <img src="{{ asset('storage/' . $slide->hero_image) }}" alt="{{ $slide->title }}" class="w-full h-full object-cover">
+                @else
+                    <div class="w-full h-full bg-gradient-to-br from-academic-blue/30 via-academic-blue/10 to-light-gray"></div>
+                @endif
             </div>
-            <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-[1.1] mb-6 animate-fade-in-up">
-                {{ $slider->title ?? 'Shaping Futures, Building Leaders' }}
-            </h1>
-            <p class="text-lg sm:text-xl text-white/75 mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up delay-200">
-                {{ $slider->subtitle ?? school_setting('school_tagline', 'Providing quality education and nurturing future leaders since our establishment.') }}
-            </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-400">
-                <a href="{{ route('online-admission.index') }}" class="inline-flex items-center gap-2 px-8 h-13 text-base font-semibold text-white bg-academic-blue rounded-xl hover:bg-academic-blue-light transition-all hover:shadow-lg hover:shadow-academic-blue/25">
-                    Apply Now
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                </a>
-                <a href="{{ route('contact') }}" class="inline-flex items-center gap-2 px-8 h-13 text-base font-semibold text-white border-2 border-white/25 rounded-xl hover:bg-white/10 transition-all backdrop-blur-sm">
-                    Contact Us
-                </a>
-            </div>
-        </div>
+        @endforeach
 
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce">
-            <svg class="w-6 h-6 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
-        </div>
+        {{-- Slide text content --}}
+        @foreach ($slides as $i => $slide)
+            <div
+                class="absolute inset-0 z-20 flex items-center justify-center transition-all duration-700 ease-in-out"
+                :class="current === {{ $i }} ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'"
+            >
+                <div class="text-center max-w-4xl mx-auto px-5">
+                    {{-- <div>
+                        <span class="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white/80 text-sm font-medium mb-6 backdrop-blur-sm border border-white/10">
+                            Welcome to {{ school_setting('school_name', 'Our School') }}
+                        </span>
+                    </div> --}}
+                    <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-[1.1] mb-6">
+                        {{ $slide->title ?? 'Shaping Futures, Building Leaders' }}
+                    </h1>
+                    {{-- <p class="text-lg sm:text-xl text-white/75 mb-10 max-w-2xl mx-auto leading-relaxed">
+                        {{ $slide->subtitle ?? school_setting('school_tagline', 'Providing quality education and nurturing future leaders since our establishment.') }}
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a href="{{ $slide->link ?: route('online-admission.index') }}" class="inline-flex items-center gap-2 px-8 h-13 text-base font-semibold text-white bg-academic-blue rounded-xl hover:bg-academic-blue-light transition-all hover:shadow-lg hover:shadow-academic-blue/25">
+                            {{ $slide->button_text ?: 'Apply Now' }}
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                        </a>
+                        <a href="{{ route('contact') }}" class="inline-flex items-center gap-2 px-8 h-13 text-base font-semibold text-white border-2 border-white/25 rounded-xl hover:bg-white/10 transition-all backdrop-blur-sm">
+                            Contact Us
+                        </a> --}}
+                    </div>
+                </div>
+            </div>
+        @endforeach
+
+        {{-- Dot indicators --}}
+        @if ($slides->count() > 1)
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+                @foreach ($slides as $i => $slide)
+                    <button
+                        @click="goTo({{ $i }})"
+                        class="w-2.5 h-2.5 rounded-full transition-all duration-300"
+                        :class="current === {{ $i }} ? 'bg-white w-8' : 'bg-white/40 hover:bg-white/60'"
+                        aria-label="Go to slide {{ $i + 1 }}"
+                    ></button>
+                @endforeach
+            </div>
+        @endif
+
+        {{-- Touch/swipe zones (mobile) --}}
+        @if ($slides->count() > 1)
+            <div class="absolute inset-y-0 left-0 w-1/4 z-20 cursor-pointer" @click="prev()"></div>
+            <div class="absolute inset-y-0 right-0 w-1/4 z-20 cursor-pointer" @click="next()"></div>
+        @endif
     </section>
 
     {{-- ============================================================ --}}
@@ -641,6 +677,28 @@
                     this.submitting = false;
                 }
             },
+        }));
+
+        Alpine.data('heroCarousel', (count) => ({
+            current: 0,
+            total: count,
+            interval: null,
+            init() {
+                if (this.total <= 1) return;
+                this.startAuto();
+                this.$el.addEventListener('mouseenter', () => this.stopAuto());
+                this.$el.addEventListener('mouseleave', () => this.startAuto());
+            },
+            startAuto() {
+                this.stopAuto();
+                this.interval = setInterval(() => this.next(), 5000);
+            },
+            stopAuto() {
+                if (this.interval) { clearInterval(this.interval); this.interval = null; }
+            },
+            next() { this.current = (this.current + 1) % this.total; },
+            prev() { this.current = (this.current - 1 + this.total) % this.total; },
+            goTo(i) { this.current = i; this.startAuto(); },
         }));
     });
 </script>
