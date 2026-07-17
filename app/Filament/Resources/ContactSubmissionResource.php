@@ -11,6 +11,7 @@ use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -50,9 +51,10 @@ class ContactSubmissionResource extends Resource
                     ->searchable(),
                 TextColumn::make('message')
                     ->limit(50),
-                IconColumn::make('is_read')
-                    ->boolean()
-                    ->label('Read'),
+                ToggleColumn::make('is_read')
+                    ->label('Read')
+                    ->onColor('success')
+                    ->offColor('gray'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
@@ -65,6 +67,18 @@ class ContactSubmissionResource extends Resource
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
+            ])
+            ->headerActions([
+                \Filament\Actions\BulkAction::make('markRead')
+                    ->label('Mark as Read')
+                    ->icon('heroicon-o-check-circle')
+                    ->action(fn ($records) => $records->each->update(['is_read' => true]))
+                    ->deselectRecordsAfterCompletion(),
+                \Filament\Actions\BulkAction::make('markUnread')
+                    ->label('Mark as Unread')
+                    ->icon('heroicon-o-x-circle')
+                    ->action(fn ($records) => $records->each->update(['is_read' => false]))
+                    ->deselectRecordsAfterCompletion(),
             ]);
     }
 

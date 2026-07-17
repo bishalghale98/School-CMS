@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Widgets;
 
 use App\Models\AdmissionInquiry;
+use App\Models\ContactSubmission;
 use App\Models\Event;
 use App\Models\Gallery;
 use App\Models\News;
@@ -18,7 +19,7 @@ class StatsOverview extends BaseWidget
 
     public function getColumns(): int
     {
-        return 5;
+        return 6;
     }
 
     protected function getStats(): array
@@ -44,6 +45,10 @@ class StatsOverview extends BaseWidget
                 ->description('Total albums')
                 ->descriptionIcon('heroicon-o-photo')
                 ->color('danger'),
+            Stat::make('Contact Inquiries', ContactSubmission::count())
+                ->description('Total contact messages')
+                ->descriptionIcon('heroicon-o-envelope')
+                ->color('info'),
         ];
     }
 }

@@ -7,7 +7,7 @@ namespace App\Filament\Resources;
 use App\Enums\AdmissionStatus;
 use App\Filament\Resources\AdmissionInquiryResource\Pages;
 use App\Models\AdmissionInquiry;
-use Filament\Forms\Components\Section;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
