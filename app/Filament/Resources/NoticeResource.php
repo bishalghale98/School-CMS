@@ -71,6 +71,8 @@ class NoticeResource extends Resource
                     FileUpload::make('attachments')
                         ->multiple()
                         ->maxFiles(5)
+                        ->disk('public')
+                        ->directory('notice-attachments')
                         ->columnSpanFull(),
                 ]),
             ]);

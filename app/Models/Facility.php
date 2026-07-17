@@ -22,10 +22,12 @@ class Facility extends Model
         'type',
         'sort_order',
         'is_published',
+        'images',
     ];
 
     protected $casts = [
         'features' => 'array',
+        'images' => 'array',
         'type' => FacilityType::class,
         'is_published' => 'boolean',
     ];

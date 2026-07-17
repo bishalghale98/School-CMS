@@ -27,6 +27,7 @@ class Slider extends Model
         'button_text',
         'sort_order',
         'is_active',
+        'hero_image',
     ];
 
     protected $casts = [

@@ -23,7 +23,7 @@
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4">Welcome to School CMS</h1>
                 <p class="text-lg sm:text-xl text-white/80 mb-8 max-w-2xl mx-auto leading-relaxed">Providing quality education and nurturing future leaders since our establishment.</p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a href="{{ route('about') }}" class="inline-flex items-center px-8 h-12 text-base font-medium text-white border-2 border-white/30 rounded-xl hover:bg-white/10 transition-colors">Learn More</a>
+                    <a href="{{ route('about.index') }}" class="inline-flex items-center px-8 h-12 text-base font-medium text-white border-2 border-white/30 rounded-xl hover:bg-white/10 transition-colors">Learn More</a>
                     <a href="{{ route('admissions') }}" class="inline-flex items-center px-8 h-12 text-base font-medium text-white bg-academic-blue rounded-xl hover:bg-academic-blue/90 transition-colors">Apply Now</a>
                 </div>
             </div>

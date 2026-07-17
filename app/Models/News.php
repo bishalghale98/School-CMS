@@ -27,6 +27,7 @@ class News extends Model
         'meta_title',
         'meta_description',
         'og_image',
+        'featured_image',
     ];
 
     protected $casts = [

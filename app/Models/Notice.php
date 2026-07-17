@@ -27,12 +27,14 @@ class Notice extends Model
         'published_at',
         'meta_title',
         'meta_description',
+        'attachments',
     ];
 
     protected $casts = [
         'status' => NoticeStatus::class,
         'is_pinned' => 'boolean',
         'published_at' => 'datetime',
+        'attachments' => 'array',
     ];
 
     public function category(): BelongsTo

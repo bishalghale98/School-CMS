@@ -25,5 +25,7 @@ class Setting extends Model
         'value',
         'group',
         'type',
+        'logo',
+        'favicon',
     ];
 }

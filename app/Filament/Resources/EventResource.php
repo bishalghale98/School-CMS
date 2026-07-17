@@ -69,6 +69,8 @@ class EventResource extends Resource
                         ->image()
                         ->multiple()
                         ->maxFiles(10)
+                        ->disk('public')
+                        ->directory('events')
                         ->columnSpanFull(),
                 ]),
             ]);

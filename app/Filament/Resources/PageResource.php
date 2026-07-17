@@ -56,8 +56,10 @@ class PageResource extends Resource
                         ->maxLength(255),
                     Textarea::make('meta_description')
                         ->maxLength(500),
-                    FileUpload::make('featured_image')
+                    FileUpload::make('og_image')
                         ->image()
+                        ->disk('public')
+                        ->directory('pages')
                         ->columnSpanFull(),
                 ]),
             ]);

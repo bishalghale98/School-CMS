@@ -1,15 +1,3 @@
-@php
-$navigation = [
-    ['label' => 'Home', 'route' => 'home', 'url' => route('home'), 'routes' => ['home']],
-    ['label' => 'About', 'route' => 'about', 'url' => route('about'), 'routes' => ['about'], 'children' => [['label' => 'School History', 'route' => 'about.history', 'url' => '#'], ['label' => 'Vision & Mission', 'route' => 'about.vision-mission', 'url' => '#']]],
-    ['label' => 'Notices', 'route' => 'notices.index', 'url' => route('notices.index'), 'routes' => ['notices.index', 'notices.show']],
-    ['label' => 'News', 'route' => 'news.index', 'url' => route('news.index'), 'routes' => ['news.index', 'news.show']],
-    ['label' => 'Events', 'route' => 'events.index', 'url' => route('events.index'), 'routes' => ['events.index', 'events.show']],
-    ['label' => 'Gallery', 'route' => 'gallery.index', 'url' => route('gallery.index'), 'routes' => ['gallery.index', 'gallery.show']],
-    ['label' => 'Downloads', 'route' => 'downloads', 'url' => route('downloads'), 'routes' => ['downloads']],
-    ['label' => 'Contact', 'route' => 'contact', 'url' => route('contact'), 'routes' => ['contact']],
-];
-@endphp
 
 
 <!DOCTYPE html>
@@ -32,7 +20,11 @@ $navigation = [
     <x-layout.header :navigation="$navigation" />
 
     @unless(request()->routeIs('home'))
-        <x-layout.breadcrumbs />
+        @hasSection('breadcrumbs')
+            @yield('breadcrumbs')
+        @else
+            <x-layout.breadcrumbs :crumbs="$crumbs ?? []" />
+        @endif
     @endunless
 
     <main class="flex-1">

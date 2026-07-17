@@ -25,6 +25,7 @@ class Event extends Model
         'status',
         'meta_title',
         'meta_description',
+        'gallery',
     ];
 
     protected $casts = [
@@ -32,5 +33,6 @@ class Event extends Model
         'event_date' => 'date',
         'start_time' => 'datetime',
         'end_time' => 'datetime',
+        'gallery' => 'array',
     ];
 }

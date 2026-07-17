@@ -66,6 +66,8 @@ class NewsResource extends Resource
                         ->maxLength(500),
                     FileUpload::make('featured_image')
                         ->image()
+                        ->disk('public')
+                        ->directory('news-featured')
                         ->columnSpanFull(),
                 ]),
             ]);

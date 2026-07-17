@@ -25,6 +25,7 @@ class Teacher extends Model
         'phone',
         'sort_order',
         'is_published',
+        'photo',
     ];
 
     protected $casts = [
